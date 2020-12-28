@@ -1,8 +1,16 @@
 import React, {Component} from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import { CardList } from './components/card-list/card-list.jsx';
+import { CryptoPage } from './components/crypto/crypto.jsx'
 
 import './App.css';
+
+// const CryptoPage = () => (
+//   <div>
+//     <h1>Home Page</h1>
+//   </div>
+// );
 
 class App extends Component {
   constructor() {
@@ -23,29 +31,30 @@ class App extends Component {
           'convert' : 'USD'
         },
         headers: {
-          'X-CMC_PRO_API_KEY': '84a48385-9cb0-467f-9a63-09b640b2db75',
+          'X-CMC_PRO_API_KEY': '',
           'content-type': 'application/json',
           'accept': 'application/json',
           // 'Access-Control-Allow-Origin': '*',
           // 'Vary': 'Origin',
-          'mode': 'no-cors'
+          // 'mode': 'no-cors'
         },
         json: true,
         gzip: true
       })
       .then(response => response.json())
       .then(cryptoscurrency => this.setState({ cryptos: cryptoscurrency['data']}))
-      // .then(crypto => console.log(this.state.cryptos[0].name));
+      // .then(crypto => Object.entries(this.state.cryptos).map(crypto => crypto.map(c => console.log(c.name))));
     }
-  
+
   render() {
     return (
       <div className="App">
-      <CardList name="Samim">
-        {
-          Object.entries(this.state.cryptos).map(crypto => crypto.map(c => <h1 key={c.id}>{c.name}</h1>))
-        }
-      </CardList>
+      <Switch>
+        <Route exact path='/Home' component={CryptoPage}/>
+        <Route exact path='/Crypto'>
+            <CardList cryptos={this.state.cryptos.slice(0,8)}/>
+          </Route>
+      </Switch>
       </div>
     );
   }
